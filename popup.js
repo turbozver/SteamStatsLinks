@@ -407,6 +407,12 @@ function showPresetList() {
                 links.push({...preset});
                 order.push(preset.name);
                 chrome.storage.local.set({links, order}, () => location.reload());
+
+                chrome.tabs.query({ url: ["https://steamcommunity.com/id/*", "https://steamcommunity.com/profiles/*"] }, tabs => {
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    type: 'toggle_changed'
+                });
+            });
             });
         };
     });
