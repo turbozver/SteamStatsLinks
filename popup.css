@@ -1,0 +1,249 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: #0d1015;
+    margin: 10px;
+    color: white;
+    width: 250px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+h1 {
+    font-size: 13pt;
+    color: white;
+}
+
+.container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+}
+
+.row.dragover {
+    background: #23263a;
+}
+
+.row.dragging {
+    opacity: 0.5;
+}
+
+.main label {
+    flex: 0 0 75%;
+    display: flex;
+    align-items: center;
+    padding: 5px 8px;
+    font-size: 10pt;
+    cursor: move;
+}
+
+.main button {
+    margin-left: auto;
+    align-self: center;
+    text-align: right;
+    color: lightblue;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.main label:hover {
+    background-color: #1d2027;
+    border-radius: 4px;
+}
+
+
+
+.form-container {
+    display: none;
+    background: hsl(222, 17%, 11%);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px #000a;
+    padding: 18px 12px 12px 12px;
+    margin-top: 18px;
+    color: #fff;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-container label {
+    justify-content: flex-end;
+    min-width: 0;
+}
+
+.form-container label > span {
+    min-width: 115px;
+    text-align: right;
+    margin-right: 10px;
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.textSpan {
+    min-width: 38px !important;
+}
+
+.nomargin {
+    margin: 0 !important;
+}
+
+.form-container .textInput {
+    width: 77%;
+    padding: 4px 6px;
+    border-radius: 4px;
+    border: 1px solid #23263a;
+    background: #23263a;
+    color: #fff;
+    font-size: 10pt;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.form-container input[type="text"],
+.form-container input[type="url"] {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.form-container input[type="color"] {
+    border: none;
+    background: none;
+    width: 32px;
+    height: 24px;
+    padding: 0;
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+.form-container input[type="checkbox"] {
+    margin-left: 8px;
+    transform: scale(1.1);
+    accent-color: #3216cf;
+}
+
+.form-container button[type="submit"] {
+    margin-top: 10px;
+    background: #3216cf;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 0;
+    font-size: 10pt;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.form-container button[type="submit"]:hover {
+    background: #4b2fff;
+}
+
+.form-container button#cancelBtn {
+    margin-top: 10px;
+    background: transparent;
+    color: #aaa;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 0;
+    font-size: 10pt;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.form-container button#cancelBtn:hover {
+    color: #fff;
+}
+
+#deleteBtn {
+    flex: 0.14;
+    height: 30%; 
+    margin-top: 8%;
+    color: #c62828;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.info-icon {
+    display: inline-block;
+    min-width: 12px !important;
+    width: 12px;
+    height: 12px;
+    background: transparent;
+    color: #7ecbff;
+    margin: 0 4px 0 3px !important;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 12px;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    box-sizing: border-box;
+    transition: background 0.2s, color 0.2s;
+}
+
+.info-icon:hover {
+    background: #23263a;
+    color: #fff;
+}
+
+.info-icon::after {
+    content: attr(data-tooltip);
+    display: none;
+    position: absolute;
+    left: 50%;
+    bottom: 125%;
+    transform: translateX(-50%);
+    width: 125px;
+    background: #23263a;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: pre-line;
+    font-size: 12px;
+    z-index: 10;
+    box-shadow: 0 2px 8px #000a;
+    pointer-events: none;
+}
+.info-icon:hover::after {
+    display: block;
+}
+
+.styled-btn {
+    width: 100%;
+    background: #23263a;
+    color: #7ecbff;
+    border-radius: 5px;
+    border: none;
+    padding: 8px 0;
+    font-size: 11pt;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 2px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.styled-btn:hover {
+    background: #3216cf;
+    color: #fff;
+}

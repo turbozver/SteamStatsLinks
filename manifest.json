@@ -1,0 +1,30 @@
+{
+    "name": "Steam Stats Links",
+    "description": "Creates sites links in steam user profile",
+    "version": "1.2",
+    "manifest_version": 3,
+    "permissions": ["storage", "tabs"],
+    "icons": {
+        "16": "icons/icon16.png",
+        "32": "icons/icon32.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
+    "action": {
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "32": "icons/icon32.png",
+            "48": "icons/icon48.png"
+        },
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "run_at": "document_start",
+            "all_frames": true,
+            "matches": ["https://steamcommunity.com/id/*", "https://steamcommunity.com/profiles/*"],
+            "css": ["style.css"],
+            "js": ["main.js"]
+        }
+    ]
+}
