@@ -104,7 +104,7 @@ function showForm(link = null) {
                     <path d="M3 12h13a6 6 0 1 1 0 12" stroke="#7ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
-            <label style="margin-top: 26px;">
+            <label style="margin-top: 28px;">
                 <span class="textSpan">Title:</span>
                 <input name="name" value="${link ? link.name : ''}" class="textInput" required>
             </label>
@@ -322,6 +322,14 @@ const presets = [
         textcolor: "#ff7208"
     },
     {
+        name: "csst.at",
+        link: "https://csst.at/profile/",
+        enabled: true,
+        steamid: false,
+        bgcolor: "#1d232a",
+        textcolor: "#ffffff"
+    },
+    {
         name: "steamhistory",
         link: "https://steamhistory.net/id/",
         enabled: true,
@@ -377,7 +385,7 @@ function showPresetList() {
                     <path d="M3 12h13a6 6 0 1 1 0 12" stroke="#7ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
-            <div style="margin-bottom:5px; margin-top:16px;">Select a preset:</div>
+            <b style="margin-bottom:5px; margin-top:16px; font-size: 13pt;">Select a preset:</b>
             ${presets.map((preset, i) => `
                 <button class="presetBtn" data-index="${i}" style="
                     width:100%;

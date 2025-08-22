@@ -1,14 +1,23 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
     font-family: sans-serif;
+    font-size: 10pt;
     background-color: #0d1015;
     margin: 10px;
     color: white;
-    width: 250px;
+    width: 260px;
+    height: auto;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
 }
 
 .header {
@@ -48,7 +57,6 @@ h1 {
     display: flex;
     align-items: center;
     padding: 5px 8px;
-    font-size: 10pt;
     cursor: move;
 }
 
@@ -99,7 +107,7 @@ h1 {
 }
 
 .textSpan {
-    min-width: 38px !important;
+    min-width: 42px !important;
 }
 
 .nomargin {
@@ -107,22 +115,19 @@ h1 {
 }
 
 .form-container .textInput {
-    width: 77%;
+    width: 76%;
     padding: 4px 6px;
     border-radius: 4px;
     border: 1px solid #23263a;
     background: #23263a;
     color: #fff;
-    font-size: 10pt;
     outline: none;
-    box-sizing: border-box;
 }
 
 .form-container input[type="text"],
 .form-container input[type="url"] {
     width: 100%;
     min-width: 0;
-    box-sizing: border-box;
 }
 
 .form-container input[type="color"] {
@@ -148,7 +153,6 @@ h1 {
     border: none;
     border-radius: 4px;
     padding: 6px 0;
-    font-size: 10pt;
     cursor: pointer;
     transition: background 0.2s;
 }
@@ -164,7 +168,6 @@ h1 {
     border: none;
     border-radius: 4px;
     padding: 6px 0;
-    font-size: 10pt;
     cursor: pointer;
     transition: color 0.2s;
 }
@@ -198,7 +201,6 @@ h1 {
     cursor: pointer;
     position: relative;
     user-select: none;
-    box-sizing: border-box;
     transition: background 0.2s, color 0.2s;
 }
 
