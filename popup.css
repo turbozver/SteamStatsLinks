@@ -25,6 +25,7 @@ button, input, select, textarea {
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    margin-top: 12px;
 }
 
 h1 {
