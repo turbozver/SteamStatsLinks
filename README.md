@@ -20,18 +20,23 @@ Extension adds customizable buttons to Steam profiles, which link to external si
 ## Screenshots
 
 **1. Buttons in Steam profile**
+
 ![Profile Preview](screenshots/image.png)
 
 **2. Main page with selected sites**
+
 ![Main Page](screenshots/image-1.png)
 
 **3. Add new page**
+
 ![Add New](screenshots/image-2.png)
 
 **4. Preset selection page**
+
 ![Preset Selection](screenshots/image-3.png)
 
 **5. Manual link creation page**
+
 ![Manual Creation](screenshots/image-4.png)
 
 
