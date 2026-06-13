@@ -1,5 +1,15 @@
 const container = document.querySelector('.container');
 
+function refreshSteamTabs() {
+    chrome.tabs.query({ url: ["https://steamcommunity.com/id/*", "https://steamcommunity.com/profiles/*"] }, tabs => {
+        tabs.forEach(tab => {
+            chrome.tabs.sendMessage(tab.id, { type: 'toggle_changed' }, () => {
+                if (chrome.runtime.lastError) {}
+            });
+        });
+    });
+}
+
 function renderMainList() {
     chrome.storage.local.get(['order', 'links'], (result) => {
         const order = result.order || [];
@@ -70,12 +80,7 @@ function addDnDHandlers() {
 function saveOrder() {
     const order = Array.from(container.children).map(row => row.dataset.id);
     chrome.storage.local.set({ order });
-
-    chrome.tabs.query({ url: ["https://steamcommunity.com/id/*", "https://steamcommunity.com/profiles/*"] }, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, {
-            type: 'toggle_changed'
-        });
-    });
+    refreshSteamTabs();
 }
 
 const formContainer = document.querySelector('.form-container');
@@ -186,12 +191,7 @@ function showForm(link = null) {
                 order.push(data.name);
             }
             chrome.storage.local.set({links, order}, () => location.reload());
-
-            chrome.tabs.query({ url: ["https://steamcommunity.com/id/*", "https://steamcommunity.com/profiles/*"] }, tabs => {
-                chrome.tabs.sendMessage(tabs[0].id, {
-                    type: 'toggle_changed'
-                });
-            });
+            refreshSteamTabs();
         });
     };
 
@@ -201,12 +201,7 @@ function showForm(link = null) {
                 let links = (result.links || []).filter(l => l.name !== link.name);
                 let order = (result.order || []).filter(n => n !== link.name);
                 chrome.storage.local.set({links, order}, () => location.reload());
-
-                chrome.tabs.query({ url: ["https://steamcommunity.com/id/*", "https://steamcommunity.com/profiles/*"] }, tabs => {
-                    chrome.tabs.sendMessage(tabs[0].id, {
-                        type: 'toggle_changed'
-                    });
-                });
+                refreshSteamTabs();
             });
         };
     }
@@ -489,12 +484,7 @@ function showPresetList() {
                             render();
                             renderMainList();
                         });
-
-                        chrome.tabs.query({ url: ["https://steamcommunity.com/id/*", "https://steamcommunity.com/profiles/*"] }, tabs => {
-                            chrome.tabs.sendMessage(tabs[0].id, {
-                                type: 'toggle_changed'
-                            });
-                        });
+                        refreshSteamTabs();
                     });
                 };
             });
@@ -547,6 +537,7 @@ function showSettings() {
     document.getElementById('deleteAllBtn').onclick = () => {
         if (confirm('Are you sure you want to delete all saved links?')) {
             chrome.storage.local.set({links: [], order: []}, () => {
+                refreshSteamTabs();
                 renderMainList();
                 formContainer.style.display = 'none';
                 document.querySelector('.main').style.display = 'block';

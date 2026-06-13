@@ -17,8 +17,9 @@ async function steamID64ToAccountID(steamID64) {
 
 function updateLastWidth() {
     const container = document.getElementById('steamStatsLinks');
+    if (!container) return;
     const allButtons = Array.from(container.querySelectorAll('.btnSteamStatsLinks'));
-    buttons = allButtons.filter(btn => btn.style.display !== 'none')
+    const buttons = allButtons.filter(btn => btn.style.display !== 'none')
 
     buttons.forEach(btn => btn.style.width = '40%');
 
@@ -77,7 +78,7 @@ async function createButtons() {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === 'toggle_changed') {
-        document.getElementById('steamStatsLinks').remove();
+        document.getElementById('steamStatsLinks')?.remove();
         createButtons();
     }
 });
