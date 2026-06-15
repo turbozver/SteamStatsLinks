@@ -11,6 +11,12 @@ Extension adds customizable buttons to Steam profiles, which link to external si
 - Easy-to-use interface for managing links
 
 
+## Privacy
+
+- Settings are stored locally in the browser
+- The extension does not collect or send Steam profile data to external servers
+
+
 ## Installation
 
 - 🟢 [Chrome Web Store](https://chromewebstore.google.com/detail/steam-stats-links/ojmmcmoegpnmepjokkdemcgiklaldcld)
@@ -43,4 +49,3 @@ Extension adds customizable buttons to Steam profiles, which link to external si
 ## Contributing
 
 Feel free to open issues or submit pull requests to improve the extension.
-
