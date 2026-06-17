@@ -91,6 +91,7 @@ btnAdd.addEventListener('click', () => {
 });
 
 function showForm(link = null) {
+    const steamId3Selected = link ? link.steamid : true;
     formContainer.innerHTML = `
         <form id="linkForm" style="position:relative;">
             <button id="backFormBtn" type="button" style="
@@ -127,20 +128,32 @@ function showForm(link = null) {
                 </span>
                 <input name="link" value="${link ? link.link : ''}" class="textInput" required>
             </label>
-            <label>
-                <span>Enabled:</span>
-                <input type="checkbox" name="enabled" ${!link || link.enabled ? 'checked' : ''}>
+            <label style="display:flex; align-items:center; gap:8px; justify-content:center;">
+                <span style="min-width:auto; text-align:left; margin-right:0;">Enabled:</span>
+                <span class="enabled-switch" style="position:relative; display:inline-flex; align-items:center; flex:none; min-width:44px; max-width:44px; width:44px; height:22px; border-radius:999px; background:${!link || link.enabled ? '#3216cf' : '#444'}; cursor:pointer;">
+                    <input type="checkbox" name="enabled" ${!link || link.enabled ? 'checked' : ''} style="position:absolute; inset:0; width:100%; height:100%; opacity:0; margin:0; cursor:pointer;">
+                    <span class="enabled-thumb" style="position:absolute; top:2px; width:18px; height:18px; border-radius:50%; background:#eee; left:${!link || link.enabled ? 'calc(100% - 20px)' : '2px'}; transition:left .2s;"></span>
+                </span>
             </label>
-            <label>
-                <span>SteamID3:
-                    <span class="info-icon" data-tooltip="STEAMID64\n[unchecked]\nStarts with 7656119 and has 17 digits\n\nSTEAMID3\n[checked]\nShort version, less digits">
+            <label style="display:flex; flex-direction:column; gap:8px; align-items:center; width:100%;">
+                <span style="display:block; width:100%; text-align:center;">SteamID format:
+                    <span class="info-icon" data-tooltip="STEAMID3\nSelect for the shorter account ID variant.\n\nSTEAMID64\nSelect for the full 17-digit ID starting with 7656119.">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                             <circle cx="12" cy="12" r="12" fill="#23263a"/>
                             <text x="12" y="17" text-anchor="middle" font-size="14" fill="#7ecbff" font-family="Arial" font-weight="bold">?</text>
                         </svg>
                     </span>
                 </span>
-                <input type="checkbox" name="steamid" ${link && link.steamid ? 'checked' : ''}>
+                <div class="steamid-segment" style="display:flex; border:1px solid #444; border-radius:10px; overflow:hidden; background:#161822; width:auto; min-width:180px; max-width:220px;">
+                    <label class="steamid-segment-option" style="flex:1; margin:0;">
+                        <input type="radio" name="steamid" value="3" ${steamId3Selected ? 'checked' : ''} style="display:none;">
+                        <div class="steamid-segment-value" style="padding:6px 8px; text-align:center; cursor:pointer;">SteamID3</div>
+                    </label>
+                    <label class="steamid-segment-option" style="flex:1; margin:0;">
+                        <input type="radio" name="steamid" value="64" ${steamId3Selected ? '' : 'checked'} style="display:none;">
+                        <div class="steamid-segment-value" style="padding:6px 8px; text-align:center; cursor:pointer;">SteamID64</div>
+                    </label>
+                </div>
             </label>
             <label>
                 <span>BG Color:</span>
@@ -166,11 +179,49 @@ function showForm(link = null) {
         document.querySelector('.main').style.display = 'block';
     };
 
+    const steamSegmentOptions = document.querySelectorAll('.steamid-segment-option');
+    const updateSteamSegment = () => {
+        steamSegmentOptions.forEach(opt => {
+            const input = opt.querySelector('input[type="radio"]');
+            const valueDiv = opt.querySelector('.steamid-segment-value');
+            if (input.checked) {
+                valueDiv.style.background = '#3216cf';
+                valueDiv.style.color = '#fff';
+            } else {
+                valueDiv.style.background = 'transparent';
+                valueDiv.style.color = '#aaa';
+            }
+        });
+    };
+
+    steamSegmentOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const input = option.querySelector('input[type="radio"]');
+            input.checked = true;
+            updateSteamSegment();
+        });
+    });
+
+    const enabledInput = document.querySelector('input[name="enabled"]');
+    const enabledThumb = document.querySelector('.enabled-thumb');
+    const enabledSwitch = document.querySelector('.enabled-switch');
+
+    const updateEnabledThumb = () => {
+        const checked = enabledInput.checked;
+        enabledSwitch.style.background = checked ? '#3216cf' : '#444';
+        enabledThumb.style.left = checked ? 'calc(100% - 22px)' : '2px';
+    };
+
+    enabledInput.addEventListener('change', updateEnabledThumb);
+    updateEnabledThumb();
+
+    updateSteamSegment();
+
     document.getElementById('linkForm').onsubmit = async (e) => {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(e.target).entries());
         data.enabled = !!e.target.enabled.checked;
-        data.steamid = !!e.target.steamid.checked;
+        data.steamid = e.target.steamid.value === '3';
 
         chrome.storage.local.get(['links', 'order'], (result) => {
             let links = result.links || [];
