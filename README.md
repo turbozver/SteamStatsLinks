@@ -43,7 +43,7 @@ Extension adds customizable buttons to Steam profiles, which link to external si
 
 **5. Manual link creation page**
 
-![Manual Creation](screenshots/image-4.png)
+![Manual Creation](screenshots/image-4_2.png)
 
 
 ## Contributing
