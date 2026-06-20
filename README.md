@@ -20,7 +20,7 @@ Extension adds customizable buttons to Steam profiles, which link to external si
 ## Installation
 
 - 🟢 [Chrome Web Store](https://chromewebstore.google.com/detail/steam-stats-links/ojmmcmoegpnmepjokkdemcgiklaldcld)
-- 🦊 [Firefox Add-ons](https://addons.mozilla.org/ru/firefox/addon/steam-stats-links/)
+- 🦊 [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/steam-stats-links/)
 
 
 ## Screenshots

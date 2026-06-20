@@ -24,7 +24,13 @@ function renderMainList() {
             row.className = 'row';
             row.setAttribute('draggable', 'true');
             row.dataset.id = link.name;
-            row.innerHTML = `<label>${link.name}</label><button>edit</button>`;
+            row.innerHTML = `
+                <label>${link.name}</label>
+                <button class="edit-link-btn" type="button" title="Edit" aria-label="Edit">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 20h4.25L19.4 8.85a2 2 0 0 0 0-2.83L17.98 4.6a2 2 0 0 0-2.83 0L4 15.75V20Zm2-3.42L16.56 6.02l1.42 1.42L7.42 18H6v-1.42Z" fill="currentColor"/>
+                    </svg>
+                </button>`;
             container.appendChild(row);
         });
 
@@ -94,23 +100,10 @@ function showForm(link = null) {
     const steamId3Selected = link ? link.steamid : true;
     formContainer.innerHTML = `
         <form id="linkForm" style="position:relative;">
-            <button id="backFormBtn" type="button" style="
-                position:absolute;
-                top:-8px;
-                left:-2px;
-                background:none;
-                border:none;
-                padding:0;
-                cursor:pointer;
-                width:24px;
-                height:26px;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-            ">
+            <button id="backFormBtn" type="button" title="Back" aria-label="Back">
                 <svg width="22" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M10 19l-7-7 7-7" stroke="#7ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M3 12h13a6 6 0 1 1 0 12" stroke="#7ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M10 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 12h13a6 6 0 1 1 0 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
             <label style="margin-top: 28px;">
@@ -130,7 +123,7 @@ function showForm(link = null) {
             </label>
             <label style="display:flex; align-items:center; gap:8px; justify-content:center;">
                 <span style="min-width:auto; text-align:left; margin-right:0;">Enabled:</span>
-                <span class="enabled-switch" style="position:relative; display:inline-flex; align-items:center; flex:none; min-width:44px; max-width:44px; width:44px; height:22px; border-radius:999px; background:${!link || link.enabled ? '#3216cf' : '#444'}; cursor:pointer;">
+                <span class="enabled-switch" style="position:relative; display:inline-flex; align-items:center; flex:none; min-width:44px; max-width:44px; width:44px; height:22px; border-radius:999px; background:${!link || link.enabled ? '#8b5cf6' : '#444'}; cursor:pointer;">
                     <input type="checkbox" name="enabled" ${!link || link.enabled ? 'checked' : ''} style="position:absolute; inset:0; width:100%; height:100%; opacity:0; margin:0; cursor:pointer;">
                     <span class="enabled-thumb" style="position:absolute; top:2px; width:18px; height:18px; border-radius:50%; background:#eee; left:${!link || link.enabled ? 'calc(100% - 20px)' : '2px'}; transition:left .2s;"></span>
                 </span>
@@ -185,7 +178,7 @@ function showForm(link = null) {
             const input = opt.querySelector('input[type="radio"]');
             const valueDiv = opt.querySelector('.steamid-segment-value');
             if (input.checked) {
-                valueDiv.style.background = '#3216cf';
+                valueDiv.style.background = '#8b5cf6';
                 valueDiv.style.color = '#fff';
             } else {
                 valueDiv.style.background = 'transparent';
@@ -208,7 +201,7 @@ function showForm(link = null) {
 
     const updateEnabledThumb = () => {
         const checked = enabledInput.checked;
-        enabledSwitch.style.background = checked ? '#3216cf' : '#444';
+        enabledSwitch.style.background = checked ? '#8b5cf6' : '#444';
         enabledThumb.style.left = checked ? 'calc(100% - 22px)' : '2px';
     };
 
@@ -259,8 +252,9 @@ function showForm(link = null) {
 }
 
 document.addEventListener('click', function(e) {
-    if (e.target.tagName === 'BUTTON' && e.target.textContent === 'edit') {
-        const name = e.target.parentElement.dataset.id;
+    const editButton = e.target.closest('.edit-link-btn');
+    if (editButton) {
+        const name = editButton.parentElement.dataset.id;
         chrome.storage.local.get('links', (result) => {
             const link = (result.links || []).find(l => l.name === name);
             if (link) showForm(link);
@@ -385,6 +379,14 @@ const presets = [
                 steamid: false,
                 bgcolor: "#1d232a",
                 textcolor: "#ffffff"
+            },
+            {
+                name: "cswat.ch",
+                link: "https://cswat.ch/stats/",
+                enabled: true,
+                steamid: false,
+                bgcolor: "#fd2a36",
+                textcolor: "#ffffff"
             }
         ]
     },
@@ -468,7 +470,7 @@ function showPresetList() {
                         return `
                             <div style="margin:10px 0 4px 0;">
                                 <div style="display:flex;align-items:center;gap:8px;">
-                                    <div style="flex:1;border-bottom:1px solid #555555;font-weight:bold;color:#7ecbff;padding-bottom:6px;margin-bottom:12px;">
+                                    <div class="preset-category-title" style="flex:1;border-bottom:1px solid #555555;font-weight:bold;padding-bottom:6px;margin-bottom:12px;">
                                         ${cat.category}
                                     </div>
                                     <button class="toggleCatBtn" data-index="${i}" style="
@@ -546,30 +548,64 @@ function showPresetList() {
 }
 
 function showSettings() {
+    formContainer.classList.add('settings-view');
     formContainer.innerHTML = `
-        <div style="display:flex; flex-direction:column; gap:18px; align-items:center; padding:18px 18px 4px; position:relative;">
-            <button id="backSettingsBtn" style="position:absolute; top:-8px; left:-2px; background:none; border:none; padding:0; cursor:pointer; width:24px; height:26px; display:flex; align-items:center; justify-content:center;">
-                <svg width="22" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M10 19l-7-7 7-7" stroke="#7ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M3 12h13a6 6 0 1 1 0 12" stroke="#7ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-            <div style="display:flex; gap:18px;">
-                <button id="githubBtn" title="GitHub" style="background:none; border:none; cursor:pointer;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.51 2.87 8.34 6.84 9.7.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.17-1.1-1.48-1.1-1.48-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.08 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05a9.38 9.38 0 0 1 2.5-.34c.85 0 1.71.11 2.5.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.95-2.34 4.82-4.57 5.08.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .26.18.57.69.48A10.01 10.01 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z" fill="#7ecbff"/>
+        <div class="settings-shell">
+            <header class="settings-header">
+                <button id="backSettingsBtn" class="settings-back" type="button" title="Back" aria-label="Back">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
-                <button id="emailBtn" title="Email" style="background:none; border:none; cursor:pointer;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                        <rect x="2" y="6" width="20" height="12" rx="2" stroke="#7ecbff" stroke-width="2"/>
-                        <path d="M22 6l-10 7L2 6" stroke="#7ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
+                <h2>Settings</h2>
+                <span></span>
+            </header>
+
+            <div class="settings-stack">
+                <section class="settings-block">
+                    <div class="settings-block-title">
+                        <strong>About</strong>
+                    </div>
+
+                    <div class="settings-links">
+                        <a class="settings-link-card" href="https://github.com/turbozver/SteamStatsLinks" target="_blank" rel="noreferrer">
+                            <span class="settings-link-icon github-icon" aria-hidden="true"></span>
+                            <span><strong>GitHub</strong></span>
+                        </a>
+
+                        <a class="settings-link-card" href="mailto:turbozver24@gmail.com" target="_blank" rel="noreferrer">
+                            <span class="settings-link-icon mail-icon" aria-hidden="true"></span>
+                            <span>
+                                <strong>Contact</strong>
+                                <small>turbozver24@gmail.com</small>
+                            </span>
+                        </a>
+                    </div>
+
+                    <div class="settings-micro-grid">
+                        <div class="settings-micro-card rate-card">
+                            <span>Rate extension</span>
+                            <div id="rateBlock"></div>
+                        </div>
+                        <div class="settings-micro-card made-card">
+                            <span>Made w/ <b aria-label="love">&#10084;</b></span>
+                            <strong>by turbozver</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="settings-block">
+                    <div class="settings-block-title">
+                        <strong>Data</strong>
+                    </div>
+                    <div class="settings-actions">
+                        <button id="importBtn" type="button">Import</button>
+                        <button id="exportBtn" type="button">Export</button>
+                        <button id="deleteAllBtn" class="settings-danger" type="button">Delete All Links</button>
+                        <input id="importFile" type="file" accept="application/json" hidden>
+                    </div>
+                </section>
             </div>
-            <button id="deleteAllBtn" class="styled-btn" style="width:90%; background:#c62828; color:#fff;">Delete all links</button>
-            <div style="margin-top:8px; color:#aaa; font-size:10pt;">Made w/ <span style="color:#f84982;">&#10084;</span> by turbozver</div>
-            <div id="rateBlock" style="width: auto;"></div>
         </div>
     `;
     document.querySelector('.main').style.display = 'none';
@@ -577,20 +613,21 @@ function showSettings() {
 
     document.getElementById('backSettingsBtn').onclick = () => {
         formContainer.style.display = 'none';
+        formContainer.classList.remove('settings-view');
         document.querySelector('.main').style.display = 'block';
     };
-    document.getElementById('githubBtn').onclick = () => {
-        window.open('https://github.com/turbozver/SteamStatsLinks', '_blank');
+    document.getElementById('importBtn').onclick = () => {
+        document.getElementById('importFile').click();
     };
-    document.getElementById('emailBtn').onclick = () => {
-        window.open('mailto:turbozver24@gmail.com', '_blank');
-    };
+    document.getElementById('exportBtn').onclick = exportLinks;
+    document.getElementById('importFile').onchange = importLinks;
     document.getElementById('deleteAllBtn').onclick = () => {
         if (confirm('Are you sure you want to delete all saved links?')) {
             chrome.storage.local.set({links: [], order: []}, () => {
                 refreshSteamTabs();
                 renderMainList();
                 formContainer.style.display = 'none';
+                formContainer.classList.remove('settings-view');
                 document.querySelector('.main').style.display = 'block';
             });
         }
@@ -599,33 +636,112 @@ function showSettings() {
     renderRateBlock();
 }
 
+function exportLinks() {
+    chrome.storage.local.get(['links', 'order'], (data) => {
+        const payload = {
+            version: 1,
+            links: Array.isArray(data.links) ? data.links : [],
+            order: Array.isArray(data.order) ? data.order : []
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = `steam-stats-links-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+}
+
+function importLinks(event) {
+    const input = event.target;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            const parsed = JSON.parse(String(reader.result || '{}'));
+            const source = parsed.storage && typeof parsed.storage === 'object' ? parsed.storage : parsed;
+            if (!Array.isArray(source.links)) throw new Error('Links array is missing');
+            const links = normalizeImportedLinks(source.links);
+            if (!confirm(`Replace current data with ${links.length} imported link${links.length === 1 ? '' : 's'}?`)) return;
+
+            const names = new Set(links.map(link => link.name));
+            const order = [...new Set(Array.isArray(source.order) ? source.order.map(String) : [])]
+                .filter(name => names.has(name));
+            links.forEach(link => {
+                if (!order.includes(link.name)) order.push(link.name);
+            });
+
+            chrome.storage.local.set({ links, order }, () => {
+                refreshSteamTabs();
+                renderMainList();
+                alert('Import completed.');
+            });
+        } catch (error) {
+            alert(`Unable to import data: ${error.message}`);
+        } finally {
+            input.value = '';
+        }
+    };
+    reader.onerror = () => {
+        input.value = '';
+        alert('Unable to read the selected file.');
+    };
+    reader.readAsText(file);
+}
+
+function normalizeImportedLinks(value) {
+    if (!Array.isArray(value)) return [];
+    const names = new Set();
+    return value.reduce((result, entry) => {
+        if (!entry || typeof entry !== 'object') return result;
+        const name = String(entry.name || '').trim();
+        const link = String(entry.link || '').trim();
+        if (!name || !link || names.has(name)) return result;
+        names.add(name);
+        result.push({
+            ...entry,
+            name,
+            link,
+            enabled: entry.enabled !== false,
+            steamid: entry.steamid !== false,
+            bgcolor: String(entry.bgcolor || '#17191f'),
+            textcolor: String(entry.textcolor || '#f2f3f5')
+        });
+        return result;
+    }, []);
+}
+
 function renderRateBlock() {
     const isFirefox = navigator.userAgent.includes('Firefox');
     let url = '';
-    if (isFirefox) url = 'https://addons.mozilla.org/ru/firefox/addon/steam-stats-links/';
+    if (isFirefox) url = 'https://addons.mozilla.org/firefox/addon/steam-stats-links/';
     else url = 'https://chromewebstore.google.com/detail/steam-stats-links/ojmmcmoegpnmepjokkdemcgiklaldcld';
 
     document.getElementById('rateBlock').innerHTML = `
-        <div style="display:flex; gap:4px; justify-content:center;">
+        <div class="rate-stars" role="group" aria-label="Rate this extension">
             ${[1,2,3,4,5].map(star => `
-                <span class="rateStar" data-star="${star}" style="font-size:22px; cursor:pointer; color:#ffd700;">&#9733;</span>
+                <button class="rateStar" data-star="${star}" type="button" aria-label="Rate ${star} star${star === 1 ? '' : 's'}">&#9733;</button>
             `).join('')}
         </div>
-        <div style="text-align:center; color:#aaa; font-size:10pt; margin-top:4px;">Rate this extension</div>
     `;
     document.querySelectorAll('.rateStar').forEach(star => {
         star.onclick = () => {
             window.open(url, '_blank');
         };
 
-        star.onmouseover = e => {
+        star.onmouseenter = e => {
             const val = parseInt(e.target.dataset.star);
             document.querySelectorAll('.rateStar').forEach(s => {
                 s.style.opacity = parseInt(s.dataset.star) <= val ? "1" : "0.3";
             });
         };
 
-        star.onmouseout = () => {
+        star.onmouseleave = () => {
             document.querySelectorAll('.rateStar').forEach(s => s.style.opacity = "1");
         };
     });
